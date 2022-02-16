@@ -1,7 +1,8 @@
 import { NotFoundException } from '@nestjs/common'
 import { DeleteResult, EntityRepository, Repository } from 'typeorm'
-import { SaveRefreshTokenDto } from './dto/save-refresh-token.dto'
+
 import { RefreshToken } from './refresh-token.entity'
+import { SaveRefreshTokenDto } from './dto/save-refresh-token.dto'
 
 @EntityRepository(RefreshToken)
 export class RefreshTokenRepository extends Repository<RefreshToken> {

@@ -1,11 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 import { hash, compare } from 'bcrypt'
+
 import { User } from '../user/user.entity'
 import { UserService } from '../user/user.service'
+import { TokenPayload } from './types/tokenPayload.interface'
 import { RegisterDto } from './dto/register.dto'
 import { LoginDto } from './dto/login.dto'
-import { JwtService } from '@nestjs/jwt'
-import { TokenPayload } from './types/tokenPayload.interface'
 
 @Injectable()
 export class AuthService {
@@ -35,8 +36,7 @@ export class AuthService {
     }
 
     try {
-      const user = await this.usersService.findUserByEmail({ email })
-
+      const user = await this.usersService.findUserByEmail(email)
       await this.verifyPassword(password, user.password)
       user.password = undefined
       return user
@@ -79,7 +79,6 @@ export class AuthService {
     hashedPassword: string
   ): Promise<void> {
     const isPasswordMatching = await compare(plainTextPassword, hashedPassword)
-
     if (!isPasswordMatching) {
       throw new HttpException(
         'Wrong credentials provided',

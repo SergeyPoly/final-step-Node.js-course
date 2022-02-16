@@ -12,15 +12,16 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { Request, Response } from 'express'
-import { UserService } from '../user/user.service'
-import { RefreshTokenService } from '../refresh-token/refresh-token.service'
+
 import { User } from '../user/user.entity'
+import { UserService } from '../user/user.service'
 import { AuthService } from './auth.service'
-import { LoginDto } from './dto/login.dto'
-import { RegisterDto } from './dto/register.dto'
+import { RefreshTokenService } from '../refresh-token/refresh-token.service'
 import JwtRefreshGuard from './strategy/jwt-refresh.guard'
 import JwtGuard from './strategy/jwt.guard'
 import RequestWithUser from './types/requestWithUser.interface'
+import { LoginDto } from './dto/login.dto'
+import { RegisterDto } from './dto/register.dto'
 import { ChangePasswordDto } from './dto/change-password.dto'
 
 @Controller('auth')

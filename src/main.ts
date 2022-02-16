@@ -2,6 +2,7 @@
 require('dotenv').config()
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
+import { Transport } from '@nestjs/microservices'
 import {
   SwaggerModule,
   DocumentBuilder,
@@ -9,6 +10,12 @@ import {
 } from '@nestjs/swagger'
 import * as cookieParser from 'cookie-parser'
 import { AppModule } from './app.module'
+import {
+  rabbitmqHost,
+  rabbitmqPassword,
+  rabbitmqQueueBillingIn,
+  rabbitmqUser,
+} from './configs/rabbitmq.config'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -17,6 +24,24 @@ async function bootstrap() {
       credentials: true,
     },
   })
+
+  if (
+    rabbitmqUser &&
+    rabbitmqPassword &&
+    rabbitmqHost &&
+    rabbitmqQueueBillingIn
+  ) {
+    app.connectMicroservice({
+      transport: Transport.RMQ,
+      options: {
+        urls: [`amqp://${rabbitmqUser}:${rabbitmqPassword}@${rabbitmqHost}`],
+        queue: rabbitmqQueueBillingIn,
+        queueOptions: {
+          durable: true,
+        },
+      },
+    })
+  }
 
   app.use(cookieParser())
   app.useGlobalPipes(new ValidationPipe({ transform: true }))
@@ -32,6 +57,14 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config, options)
   SwaggerModule.setup('api', app, document)
 
+  if (
+    rabbitmqUser &&
+    rabbitmqPassword &&
+    rabbitmqHost &&
+    rabbitmqQueueBillingIn
+  ) {
+    await app.startAllMicroservices()
+  }
   await app.listen(process.env.PORT || 8000)
 }
 bootstrap()

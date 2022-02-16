@@ -1,19 +1,11 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Patch,
-  Req,
-  UseGuards,
-} from '@nestjs/common'
+import { Body, Controller, Get, Patch, Req, UseGuards } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import JwtGuard from 'src/auth/strategy/jwt.guard'
-import RequestWithUser from 'src/auth/types/requestWithUser.interface'
-import { UpdateUserDto } from './dto/update-user.dto'
+
 import { User } from './user.entity'
 import { UserService } from './user.service'
+import { UpdateUserDto } from './dto/update-user.dto'
+import JwtGuard from 'src/auth/strategy/jwt.guard'
+import RequestWithUser from 'src/auth/types/requestWithUser.interface'
 
 @ApiTags('User')
 @Controller('user')

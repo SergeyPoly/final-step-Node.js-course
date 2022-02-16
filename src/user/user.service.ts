@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import { CreateUserDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './user.entity'
 import { UserRepository } from './user.repository'
+import { CreateUserDto } from './dto/create-user.dto'
+import { UpdateUserDto } from './dto/update-user.dto'
 
 @Injectable()
 export class UserService {
@@ -31,7 +31,7 @@ export class UserService {
     return await this.userRepository.createUser(createUserDto)
   }
 
-  async findUserByEmail({ email }): Promise<User> {
+  async findUserByEmail(email: string): Promise<User> {
     if (!email) {
       throw new HttpException('Wrong data', HttpStatus.BAD_REQUEST)
     }
